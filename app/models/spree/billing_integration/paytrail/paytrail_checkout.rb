@@ -6,9 +6,6 @@ module Spree
     preference :currency, :string, :default => 'EUR'
     preference :payment_options, :string, :default => 'ACC'
 
-    attr_accessible :preferred_merchant_id, :preferred_merchant_secret, :preferred_language, :preferred_currency,
-                    :preferred_payment_options, :preferred_server, :preferred_test_mode
-
     def provider_class
       ActiveMerchant::Billing::Verkkomaksut
     end

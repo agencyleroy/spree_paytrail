@@ -4,17 +4,17 @@
 opts = {}
 opts[:transaction_id] = "#{@order.number}"
 opts[:amount] = @order.total
-opts[:return_url] = paytrail_return_order_checkout_url(@order, :token => @order.token,
+opts[:return_url] = paytrail_return_order_checkout_url(@order, :token => @order.guest_token,
                                                              :payment_method_id => payment_method.id)
-opts[:cancel_url] = paytrail_cancel_order_checkout_url(@order, :token => @order.token)
-opts[:status_url] = paytrail_status_update_url
+opts[:cancel_url] = paytrail_cancel_order_checkout_url(@order, :token => @order.guest_token)
+opts[:status_url] = paytrail_url
 opts[:payment_method_id] = payment_method.id
 %>
 
 <style>
   iframe.skrill_frame{
     border: 0px;
-    width: 600px;
+    width: 100%;
     height: 600px;
   }
 </style>

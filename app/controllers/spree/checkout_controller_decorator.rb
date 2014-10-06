@@ -26,8 +26,7 @@ module Spree
         paytrail_transaction = PaytrailTransaction.new
         payment = @order.payments.create({:amount => @order.total,
                                          :source => paytrail_transaction,
-                                         :payment_method => payment_method},
-                                         :without_protection => true)
+                                         :payment_method => payment_method})
         payment.started_processing!
         payment.pend!
       end
@@ -41,8 +40,7 @@ module Spree
         paytrail_transaction = PaytrailTransaction.new
         payment = @order.payments.create({:amount => @order.total,
                                          :source => paytrail_transaction,
-                                         :payment_method => payment_method},
-                                         :without_protection => true)
+                                         :payment_method => payment_method})
         # Added Oct 7 in an attempt to track missing payments
         payment.started_processing!
         payment.pend!
