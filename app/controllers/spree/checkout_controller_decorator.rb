@@ -55,8 +55,8 @@ module Spree
         redirect_to checkout_state_path(@order.state)
       else
         payment.complete!
-        @order.update!
         @order.finalize!
+        @order.update!
         @order.state = "complete"
         @order.save!
       end
