@@ -41,7 +41,6 @@ module ActiveMerchant #:nodoc:
           hash[:"ITEM_DISCOUNT[#{index}]"] = 0
           hash[:"ITEM_TYPE[#{index}]"] = 1
         end
-        puts YAML::dump(hash)
         return hash
       end
 
