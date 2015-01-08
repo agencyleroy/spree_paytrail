@@ -26,7 +26,7 @@ module Spree
       opts[:address2] = order.bill_address.address2
       opts[:phone_number] = order.bill_address.phone.gsub(/\D/,'') if order.bill_address.phone
       opts[:city] = order.bill_address.city
-      opts[:postal_code] = order.bill_address.zipcode
+      opts[:zipcode] = order.bill_address.zipcode
       opts[:state] = order.bill_address.state.nil? ? order.bill_address.state_name.to_s : order.bill_address.state.abbr
       opts[:country] = order.bill_address.country.name
 
@@ -35,6 +35,23 @@ module Spree
       opts[:platform] = 'Spree'
       opts[:order_id] = order.number
 
+      opts[:items] = order.item_count
+      order.line_items.each_with_index do |line_item, index|
+        line_item_title = line_item.variant.name
+        line_item.variant.option_values.each do |value|
+          line_item_title = line_item_title + " / " + value.name
+        end
+        opts["item_title[#{index}]"] = line_item_title
+        opts["item_no[#{index}]"] = line_item.variant.sku
+        opts["item_amount[#{index}]"] = line_item.quantity
+        opts["item_price[#{index}]"] = line_item.price.to_f
+        tax_rates = line_item.tax_category.tax_rates
+        if tax_rates
+          opts["item_tax[#{index}]"] = (tax_rates.first.amount * 100).to_f
+        else
+          opts["item_tax[#{index}]"] = 0
+        end
+      end
       paytrail = self.provider
       paytrail.payment_url(opts)
     end

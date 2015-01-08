@@ -3,7 +3,6 @@
 <%
 opts = {}
 opts[:transaction_id] = "#{@order.number}"
-opts[:amount] = @order.total
 opts[:return_url] = paytrail_return_order_checkout_url(@order, :token => @order.guest_token,
                                                              :payment_method_id => payment_method.id)
 opts[:cancel_url] = paytrail_cancel_order_checkout_url(@order, :token => @order.guest_token)

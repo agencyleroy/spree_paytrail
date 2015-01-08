@@ -4,7 +4,7 @@ module ActiveMerchant #:nodoc:
 
       def fields(opts)
         hash = {
-          TYPE: "S1",
+          TYPE: "E1",
           MERCHANT_ID: opts[:merchant_id],
           ORDER_NUMBER: opts[:order_id],
           REFERENCE_NUMBER: "",
@@ -19,16 +19,29 @@ module ActiveMerchant #:nodoc:
           VISIBLE_METHODS: "",
           GROUP: "",
           CURRENCY: opts[:currency],
-          AMOUNT: opts[:amount]
-          # CONTACT_EMAIL: "user@example.com",
-          # CONTACT_FIRSTNAME: opts[:firstname],
-          # CONTACT_LASTNAME: opts[:lastname],
-          # CONTACT_ADDR_STREET: opts[:address],
-          # CONTACT_ADDR_ZIP: opts[:zipcode],
-          # CONTACT_ADDR_CITY: opts[:city],
-          # CONTACT_ADDR_COUNTRY: "FI",
-          # INCLUDE_VAT: 1,
+          CONTACT_TELNO: opts[:phone_number],
+          CONTACT_CELLNO: "",
+          CONTACT_EMAIL: opts[:pay_from_email],
+          CONTACT_FIRSTNAME: opts[:firstname],
+          CONTACT_LASTNAME: opts[:lastname],
+          CONTACT_COMPANY: "",
+          CONTACT_ADDR_STREET: opts[:address],
+          CONTACT_ADDR_ZIP: opts[:zipcode],
+          CONTACT_ADDR_CITY: opts[:city],
+          CONTACT_ADDR_COUNTRY: "FI",
+          INCLUDE_VAT: 1,
+          ITEMS: opts[:items],
         }
+        for index in 0..opts[:items]-1 do
+          hash[:"ITEM_TITLE[#{index}]"] = opts["item_title[#{index}]"]
+          hash[:"ITEM_NO[#{index}]"] = opts["item_no[#{index}]"]
+          hash[:"ITEM_AMOUNT[#{index}]"] = opts["item_amount[#{index}]"]
+          hash[:"ITEM_PRICE[#{index}]"] = opts["item_price[#{index}]"]
+          hash[:"ITEM_TAX[#{index}]"] = opts["item_tax[#{index}]"]
+          hash[:"ITEM_DISCOUNT[#{index}]"] = 0
+          hash[:"ITEM_TYPE[#{index}]"] = 1
+        end
+        puts YAML::dump(hash)
         return hash
       end
 
@@ -48,7 +61,6 @@ module ActiveMerchant #:nodoc:
       def generate_md5string(data, secret)
         fields = [secret,
                   data[:MERCHANT_ID],
-                  data[:AMOUNT],
                   data[:ORDER_NUMBER],
                   data[:REFERENCE_NUMBER],
                   data[:ORDER_DESCRIPTION],
@@ -62,17 +74,29 @@ module ActiveMerchant #:nodoc:
                   data[:PRESELECTED_METHOD],
                   data[:MODE],
                   data[:VISIBLE_METHODS],
-                  data[:GROUP]]
-                  ### For use with form type E1
-                  # data[:CONTACT_EMAIL],
-                  # data[:CONTACT_FIRSTNAME],
-                  # data[:CONTACT_LASTNAME],
-                  # data[:CONTACT_ADDR_STREET],
-                  # data[:CONTACT_ADDR_ZIP],
-                  # data[:CONTACT_ADDR_CITY],
-                  # data[:CONTACT_ADDR_COUNTRY],
-                  # data[:INCLUDE_VAT],
-        
+                  data[:GROUP],
+                  data[:CONTACT_TELNO],
+                  data[:CONTACT_CELLNO],
+                  data[:CONTACT_EMAIL],
+                  data[:CONTACT_FIRSTNAME],
+                  data[:CONTACT_LASTNAME],
+                  data[:CONTACT_COMPANY],
+                  data[:CONTACT_ADDR_STREET],
+                  data[:CONTACT_ADDR_ZIP],
+                  data[:CONTACT_ADDR_CITY],
+                  data[:CONTACT_ADDR_COUNTRY],
+                  data[:INCLUDE_VAT],
+                  data[:ITEMS]]
+        for index in 0..data[:ITEMS]-1 do
+          fields.append(data[:"ITEM_TITLE[#{index}]"])
+          fields.append(data[:"ITEM_NO[#{index}]"])
+          fields.append(data[:"ITEM_AMOUNT[#{index}]"])
+          fields.append(data[:"ITEM_PRICE[#{index}]"])
+          fields.append(data[:"ITEM_TAX[#{index}]"])
+          fields.append(data[:"ITEM_DISCOUNT[#{index}]"])
+          fields.append(data[:"ITEM_TYPE[#{index}]"])
+        end
+
         fields = fields.join("|")
         return Digest::MD5.hexdigest(fields).upcase.to_s
       end
