@@ -15,7 +15,7 @@ Gem::Specification.new do |s|
   s.homepage = "http://github.com/eoy/spree_paytrail"
   s.required_ruby_version = Gem::Requirement.new(">= 1.9.2")
   s.requirements = ["none"]
-  s.rubygems_version = "2.2.3"
+  s.rubygems_version = "2.2.4"
   s.summary = "Spree extension for integration with Paytrail"
 
   if s.respond_to? :specification_version then
