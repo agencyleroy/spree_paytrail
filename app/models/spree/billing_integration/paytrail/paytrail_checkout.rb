@@ -45,13 +45,17 @@ module Spree
         opts["item_no[#{index}]"] = line_item.variant.sku
         opts["item_amount[#{index}]"] = line_item.quantity
         opts["item_price[#{index}]"] = line_item.price.to_f
-        tax_rates = line_item.tax_category.tax_rates
-        if tax_rates
+        tax_category = line_item.tax_category
+        if tax_category && tax_category.tax_rates
+          tax_rates = tax_category.tax_rates
           opts["item_tax[#{index}]"] = (tax_rates.first.amount * 100).to_f
         else
           opts["item_tax[#{index}]"] = 0
         end
       end
+
+      opts[:shipping_costs] = order.ship_total
+
       paytrail = self.provider
       paytrail.payment_url(opts)
     end

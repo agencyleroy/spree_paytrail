@@ -30,7 +30,7 @@ module ActiveMerchant #:nodoc:
           CONTACT_ADDR_CITY: opts[:city],
           CONTACT_ADDR_COUNTRY: "FI",
           INCLUDE_VAT: 1,
-          ITEMS: opts[:items],
+          ITEMS: opts[:items] + 1,
         }
         for index in 0..opts[:items]-1 do
           hash[:"ITEM_TITLE[#{index}]"] = opts["item_title[#{index}]"]
@@ -41,6 +41,13 @@ module ActiveMerchant #:nodoc:
           hash[:"ITEM_DISCOUNT[#{index}]"] = 0
           hash[:"ITEM_TYPE[#{index}]"] = 1
         end
+        hash[:"ITEM_TITLE[#{opts[:items]}]"] = 'Shipping costs'
+        hash[:"ITEM_NO[#{opts[:items]}]"] = ''
+        hash[:"ITEM_AMOUNT[#{opts[:items]}]"] = 1
+        hash[:"ITEM_PRICE[#{opts[:items]}]"] = opts[:shipping_costs]
+        hash[:"ITEM_TAX[#{opts[:items]}]"] = 24
+        hash[:"ITEM_DISCOUNT[#{opts[:items]}]"] = 0
+        hash[:"ITEM_TYPE[#{opts[:items]}]"] = 2
         return hash
       end
 
@@ -86,7 +93,7 @@ module ActiveMerchant #:nodoc:
                   data[:CONTACT_ADDR_COUNTRY],
                   data[:INCLUDE_VAT],
                   data[:ITEMS]]
-        for index in 0..data[:ITEMS]-1 do
+        for index in 0..data[:ITEMS] - 2 do
           fields.append(data[:"ITEM_TITLE[#{index}]"])
           fields.append(data[:"ITEM_NO[#{index}]"])
           fields.append(data[:"ITEM_AMOUNT[#{index}]"])
@@ -95,6 +102,13 @@ module ActiveMerchant #:nodoc:
           fields.append(data[:"ITEM_DISCOUNT[#{index}]"])
           fields.append(data[:"ITEM_TYPE[#{index}]"])
         end
+        fields.append(data[:"ITEM_TITLE[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_NO[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_AMOUNT[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_PRICE[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_TAX[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_DISCOUNT[#{data[:ITEMS]-1}]"])
+        fields.append(data[:"ITEM_TYPE[#{data[:ITEMS]-1}]"])
 
         fields = fields.join("|")
         return Digest::MD5.hexdigest(fields).upcase.to_s
