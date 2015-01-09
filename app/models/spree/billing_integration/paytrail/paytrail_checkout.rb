@@ -35,7 +35,7 @@ module Spree
       opts[:platform] = 'Spree'
       opts[:order_id] = order.number
 
-      opts[:items] = order.item_count
+      opts[:items] = order.line_items.count
       order.line_items.each_with_index do |line_item, index|
         line_item_title = line_item.variant.name
         line_item.variant.option_values.each do |value|

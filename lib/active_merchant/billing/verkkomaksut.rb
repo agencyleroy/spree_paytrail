@@ -48,6 +48,7 @@ module ActiveMerchant #:nodoc:
         hash[:"ITEM_TAX[#{opts[:items]}]"] = 24
         hash[:"ITEM_DISCOUNT[#{opts[:items]}]"] = 0
         hash[:"ITEM_TYPE[#{opts[:items]}]"] = 2
+
         return hash
       end
 
