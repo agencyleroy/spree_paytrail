@@ -62,7 +62,7 @@ module Spree
 
     private
       def set_global_options(opts)
-        opts[:recipient_description] = Spree::Config[:site_name]
+        opts[:recipient_description] = Spree::Store.current.name
         opts[:payment_methods] = self.preferred_payment_options
       end
 
