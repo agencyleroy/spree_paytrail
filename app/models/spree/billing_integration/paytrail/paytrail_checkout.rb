@@ -54,7 +54,7 @@ module Spree
         end
       end
 
-      opts[:shipping_costs] = order.ship_total
+      opts[:shipping_costs] = order.ship_total + order.shipment_adjustments.sum(:amount)
 
       paytrail = self.provider
       paytrail.payment_url(opts)
