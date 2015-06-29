@@ -54,7 +54,7 @@ module Spree
         end
       end
 
-      opts[:shipping_costs] = order.ship_total + order.shipment_adjustments.eligible.sum(:amount)
+      opts[:shipping_costs] = order.shipment_adjustments.eligible.any? ? 0.00 : order.ship_total
 
       paytrail = self.provider
       paytrail.payment_url(opts)
