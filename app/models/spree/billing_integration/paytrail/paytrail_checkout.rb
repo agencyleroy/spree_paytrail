@@ -54,7 +54,7 @@ module Spree
         end
       end
 
-      opts[:shipping_costs] = order.promotions.where(name: "Ilmainen toimitus").any? ? 0.00 : order.ship_total
+      opts[:shipping_costs] = (oder.total >= 100 && order.shipment_adjustments.eligible.any?) ? 0.00 : order.ship_total
 
       paytrail = self.provider
       paytrail.payment_url(opts)
