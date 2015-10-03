@@ -38,7 +38,7 @@ module ActiveMerchant #:nodoc:
           hash[:"ITEM_AMOUNT[#{index}]"] = opts["item_amount[#{index}]"]
           hash[:"ITEM_PRICE[#{index}]"] = opts["item_price[#{index}]"]
           hash[:"ITEM_TAX[#{index}]"] = opts["item_tax[#{index}]"]
-          hash[:"ITEM_DISCOUNT[#{index}]"] = 0
+          hash[:"ITEM_DISCOUNT[#{index}]"] = opts["item_discount[#{index}]"]
           hash[:"ITEM_TYPE[#{index}]"] = 1
         end
         hash[:"ITEM_TITLE[#{opts[:items]}]"] = 'Shipping costs'
